@@ -1,7 +1,53 @@
 ﻿@page "/"
+@using FormsValidation.Shared
+@inject HttpClient Http
+<h1>Add a customer</h1>
 
-<h1>Hello, world!</h1>
+<p>Get data from service.</p>
+<EditForm Model="@customer" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <p>
+        <label for="code">Code: </label>
+        <InputText id="code" bind-Value="@customer.Code" />
+        <ValidationMessage For="@(() => customer.Code)" />
+    </p>
+    <p>
+        <label for="name">Name: </label>
+        <InputText id="name" bind-Value="@customer.Name" />
+        <ValidationMessage For="@(() => customer.Name)" />
+    </p>
+    <p>
+        <label for="description">Description: </label>
+        <InputText id="description" bind-Value="@customer.Description" />
+        <ValidationMessage For="@(() => customer.Description)" />
+    </p>
+    <p>
+        <label for="rating">Maximum Accommodation: </label>
+        <InputNumber id="rating" bind-Value="@customer.Rating" />
+        <ValidationMessage For="@(() => customer.Rating)" />
+    </p>
+    <p>
+        <label for="active">Active: </label>
+        <InputCheckbox id="active" bind-Value="@customer.Active" />
+        <ValidationMessage For="@(() => customer.Active)" />
+    </p>
+    <p>
+        <label for="nextVisitDate">Next Visit Date: </label>
+        <InputDate Id="nextVisitDate" bind-Value="@customer.NextVisitDate" />
+        <ValidationMessage For="@(() => customer.NextVisitDate)" />
+    </p>
+    <button type="submit">Submit</button>
+</EditForm>
 
-Welcome to your new app.
+@functions {
+    private Customer customer = new Customer();
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    private async Task HandleValidSubmit()
+    {
+        //Writing in browser console
+        Console.WriteLine("Model is valid");
+        await Http.PostJsonAsync("api/Customer", customer);
+    }
+}
+

@@ -1,0 +1,45 @@
+﻿@page "/customers"
+@using FormsValidation.Shared
+@inject HttpClient Http
+
+<h1>Customers</h1>
+
+<p>Get data from service.</p>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>NextVisitDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+            <tr>
+                <td>@customer.Code</td>
+                <td>@customer.Name</td>
+                <td>@customer.Description</td>
+                <td>@customer.NextVisitDate</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+    List<Customer> customers;
+
+    protected override async Task OnInitAsync()
+    {
+        customers = await Http.GetJsonAsync<List<Customer>>("api/Customer");
+    }
+}
